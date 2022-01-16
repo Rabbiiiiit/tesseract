@@ -5,6 +5,7 @@ on:
   #push:
   schedule:
     - cron: 0 20 * * *
+  workflow_dispatch:
 jobs:
 
   brew:
@@ -14,7 +15,7 @@ jobs:
       matrix:
         config:
           - { name: macos-10.15-clang-12-autotools, os: macos-10.15, cxx: clang++ }
-          - { name: macos-10.15-gcc-10-autotools, os: macos-10.15, cxx: g++-10 }
+#          - { name: macos-10.15-gcc-10-autotools, os: macos-10.15, cxx: g++-10 }
 
     steps:
     - uses: actions/checkout@v2
@@ -127,9 +128,10 @@ jobs:
            cp tessdata_unittest/fonts/* test/testing/
            mv tessdata_unittest/* ../
 
-    - name: Install Macports
+    - name: Install Macports and remove Homebrew
       run: |
         curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci; source ./macports-ci install
+        rm -v $(brew --prefix)/bin/*
 
     - name: Install Dependencies
       run: |
